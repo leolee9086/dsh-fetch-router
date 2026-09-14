@@ -1,6 +1,6 @@
 {
   "name": "@leolee9086/dsh-fetch-router",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Route and rewrite the harness's outbound HTTP requests by host and path, with a native right-sidebar monitor.",
   "type": "module",
   "main": "lib/index.js",
