@@ -13,7 +13,7 @@
     "bundle": { "patch": "./cordis.patch.yml" },
     "client": { "platform": "web" }
   },
-  "files": ["lib", "cordis.patch.yml"],
+  "files": ["lib", "cordis.patch.yml", "assets"],
   "license": "MIT",
   "publishConfig": { "access": "public" },
   "repository": { "type": "git", "url": "git+https://github.com/leolee9086/dsh-fetch-router.git" },
