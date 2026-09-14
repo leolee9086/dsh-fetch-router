@@ -1,0 +1,11 @@
+node_modules/
+*.log
+.DS_Store
+.idea/
+.vscode/
+
+# internal working documents
+PLAN.md
+HANDOFF.md
+*.bak
+.ghcache/

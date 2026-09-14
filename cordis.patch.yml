@@ -1,0 +1,31 @@
+# dsh-fetch-router 的 bundle patch：装载行 + 默认规则。
+# 默认规则解决 OpenCode Zen 的 400 MissingSessionID：该网关要求
+# x-opencode-session，缺了就直接拒。可在 profile 的 cordis.patch.yml 里
+# 用同 id 覆盖 config。
+- insert:
+    - id: fetch-router
+      name: "dsh-fetch-router"
+      config:
+        reserved: [user-agent]
+        ifAbsent: true
+        allowMock: false
+        onMissing: fail
+        log: { matched: true, passthrough: false, headers: false, buffer: 200 }
+        panel: { enabled: true, path: '/fetch-router' }
+        routes:
+          - id: opencode-session-chat
+            match:
+              host: "opencode.ai"
+              path: "/zen/go/v1/chat/completions"
+              methods: [POST]
+              provider: "opencode-go*"
+            require: [session]
+            headers: { x-opencode-session: "$session" }
+          - id: opencode-session-responses
+            match:
+              host: "opencode.ai"
+              path: "/zen/go/v1/responses"
+              methods: [POST]
+              provider: "opencode-go*"
+            require: [session]
+            headers: { x-opencode-session: "$session" }
