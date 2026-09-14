@@ -9,3 +9,6 @@ PLAN.md
 HANDOFF.md
 *.bak
 .ghcache/
+
+pnpm-lock.yaml
+
