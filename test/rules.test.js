@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createFetchEntry } from 'sac-path-router'
+import { createFetchEntry } from '@leolee9086/sac-path-router'
 import {
   buildRouter, globMatch, hostLooksRouted, normalizeConfig, requestTarget, resolveTemplate, routeApplies,
 } from '../lib/rules.js'
