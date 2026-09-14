@@ -11,4 +11,5 @@ HANDOFF.md
 .ghcache/
 
 pnpm-lock.yaml
+pnpm-workspace.yaml
 
