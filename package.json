@@ -1,5 +1,5 @@
 {
-  "name": "dsh-fetch-router",
+  "name": "@leolee9086/dsh-fetch-router",
   "version": "0.1.0",
   "description": "Route and rewrite the harness's outbound HTTP requests by host and path, with a native right-sidebar monitor.",
   "type": "module",
@@ -15,8 +15,9 @@
   },
   "files": ["lib", "cordis.patch.yml"],
   "license": "MIT",
+  "publishConfig": { "access": "public" },
   "repository": { "type": "git", "url": "git+https://github.com/leolee9086/dsh-fetch-router.git" },
   "keywords": ["dsh-plugin", "deepseek-harness", "fetch", "router", "header"],
-  "dependencies": { "sac-path-router": "git+https://github.com/leolee9086/sac-path-router.git" },
+  "dependencies": { "@leolee9086/sac-path-router": "^0.1.0" },
   "scripts": { "test": "node --test" }
 }

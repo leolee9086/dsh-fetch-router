@@ -1,19 +1,19 @@
-# dsh-fetch-router
+# @leolee9086/dsh-fetch-router
 
 按 `host + path` 路由 DSH 的出网 HTTP 请求：可注入/改写请求头、改写目标、本地应答；带一个 **DSH 原生右侧栏**监控面板。默认规则解决 OpenCode Zen 网关的 `400 MissingSessionID`（该网关要求 `x-opencode-session`，缺失即拒）。
 
 ## 安装
 
 ```sh
-dsh plugin --profile web add git+https://github.com/leolee9086/dsh-fetch-router.git
-dsh plugin --profile web remove dsh-fetch-router
+dsh plugin --profile web add @leolee9086/dsh-fetch-router
+dsh plugin --profile web remove @leolee9086/dsh-fetch-router
 ```
 
-装完重启 DSH 让宿主半边生效；界面半边改动硬刷新浏览器即可。
+装完重启 DSH 让宿主半边生效。
 
 包自带 bundle patch（`cordis.patch.yml`），安装后由 `dsh plugin` 并入 profile layers，不需要手改 profile 的 `cordis.patch.yml`。
 
-依赖 [`sac-path-router`](https://github.com/leolee9086/sac-path-router)，同样按 git 依赖拉取（两个仓库都把运行所需的构建产物入库，因此安装时不跑任何构建脚本）。要锁版本可加提交号：`git+https://github.com/leolee9086/dsh-fetch-router.git#<commit>`。
+依赖 [`@leolee9086/sac-path-router`](https://github.com/leolee9086/sac-path-router)（同为 npm 包，安装时不跑构建脚本）。
 
 ## 配置
 
@@ -68,6 +68,16 @@ node test/rules.test.js && node test/interceptor.test.js && node test/scope.test
 
 （`node --test` 会派生子进程，在受限沙箱里会被拒；逐文件执行等价。）
 
+## 赞赏
+
+![赞赏码](assets/sponsor-qr.png)
+
+> **联系作者**：逐暝（leolee9086）· 点击链接加入群聊【工具软件爱好者折腾群-综合讨论】：https://qm.qq.com/q/RAHJuyhQQ （群号 1017854502，群主 逐暝）
+
 ## 许可
 
 MIT
+
+---
+
+作者：逐暝 · QQ 群：1017854502 — https://qm.qq.com/q/RAHJuyhQQ
