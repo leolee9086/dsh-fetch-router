@@ -4,7 +4,7 @@
 # 用同 id 覆盖 config。
 - insert:
     - id: fetch-router
-      name: "dsh-fetch-router"
+      name: "@leolee9086/dsh-fetch-router"
       config:
         reserved: [user-agent]
         ifAbsent: true
