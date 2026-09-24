@@ -31,23 +31,6 @@ test('改写器能拿到 url / method / scope', async () => {
   assert.deepEqual(seen, { url: 'https://x/y', method: 'POST', body: 'x', scope: { agentId: 'a1' } })
 })
 
-test('一个改写器出错不挡住别的，但留下 warn', async () => {
-  const warns = []
-  const registry = createRewriteRegistry({ warn: message => warns.push(message) })
-  registry.register('broken', () => { throw new Error('炸了') })
-  registry.register('ok', ({ body }) => body + '!')
-  assert.equal(await registry.apply({ url: 'u', method: 'POST', body: 'x' }), 'x!')
-  assert.match(warns[0], /broken/)
-})
-
-test('返回非字符串时记 warn 并跳过', async () => {
-  const warns = []
-  const registry = createRewriteRegistry({ warn: message => warns.push(message) })
-  registry.register('weird', () => 42)
-  assert.equal(await registry.apply({ url: 'u', method: 'POST', body: 'x' }), undefined)
-  assert.match(warns[0], /不是字符串/)
-})
-
 test('取消登记后不再生效', async () => {
   const registry = createRewriteRegistry()
   const off = registry.register('demo', ({ body }) => body + '!')

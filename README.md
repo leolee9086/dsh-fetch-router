@@ -40,7 +40,7 @@ dsh plugin --profile web remove @leolee9086/dsh-fetch-router
 - 模板：`$session`、`$provider`、`$model`、`$purpose`、`$requestId`；取不到值即报错（`onMissing: fail`）。
 - `rewrite.url`：把请求改到另一个目标；`rewrite.path` / `rewrite.search` 可选。
 - `respond`：本地应答，需 `allowMock: true`。伪造响应会进入模型上下文但不进会话日志，破坏 "Model-visible ⟺ logged"，仅测试 profile 使用。
-- 同一 `path` 上多条规则按声明顺序取第一条满足条件的；未命中任何规则 ⇒ 原样透传（不构造 `Request`）。
+- 同一 `path` 上多条规则按声明顺序取第一条满足条件的；未命中任何端点规则 ⇒ 不做端点处理，请求照常出网。
 
 ## 面板
 
@@ -51,9 +51,27 @@ dsh plugin --profile web remove @leolee9086/dsh-fetch-router
 - 数据面：`GET {panel.path}/stats.json`、`GET {panel.path}/events`（SSE）、`POST {panel.path}/recording`。仅接受 loopback 请求。
 - 隐私：不写会话日志、不发 session 事件；默认不记录 body；`authorization`、`cookie`、`*token*`、`*secret*` 等永不显示值。
 
+## 两层：内容改写与端点路由
+
+router 里有两层，各管一件事，**不共用一道门**：
+
+- **中间件层（内容改写）**：`requestRewrite` 登记的改写器，在**路径匹配之前**跑，
+  对所有请求生效。它看的是 body，跟这条请求发去哪个 host 无关。改完写进 `ctx.requestBody`，
+  由 fetch 入口在出网时使用。只有字符串 body 才改 —— 流、FormData、URLSearchParams 不碰。
+- **路由层（端点规则）**：按 `host` + `path` 匹配，决定注头 / 改目标 / 本地应答。
+
+分层的理由：内容改写是「某一次发送时对 body 的操作」，跟端点归属正交。
+把两件事塞进同一个判断，会让**未命中端点规则的 host 连 body 都改不了** ——
+而那正是内容改写唯一关心的事。
+
+代价：所有请求都会构造 `Request`（不再有 host 早退）。换取的是改写对每条请求都成立。
+
 ## 行为与边界
 
-- 未命中直接调用原 `fetch`，不构造对象、不读 body。
+- 所有请求都交给 router：中间件层要对每条请求跑一次改写，所以没有 host 早退。
+  未命中端点规则的请求不带端点处理，原样出网。
+- 改写器抛错时立即拒绝本次请求，原始异常及其 `cause` 向调用方传播；非法返回值直接报错，不跳过后继续发送。
+- 改写记录与端点记录使用同一回调，均携带原始 `request`，记录动作不写模型消息或会话历史。
 - 配置非法 ⇒ 拒绝安装，保持原 `fetch`。
 - dispose 后先变为纯透传，再按身份还原 `globalThis.fetch`。
 - 改写 `ctx.path` 的重派那趟不发网，body 只在最终转发时消费一次。
