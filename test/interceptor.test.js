@@ -10,6 +10,7 @@ function bench(rawConfig, scope, rewrite) {
   const recorder = createRecorder(config)
   const built = buildRouter(config, {
     nextRequestId: () => 'req',
+    rewrite,
     record: entry => recorder.record({
       route: entry.route,
       outcome: entry.outcome,
@@ -31,7 +32,6 @@ function bench(rawConfig, scope, rewrite) {
     scope: () => scope,
     recorder,
     warn: () => {},
-    ...(rewrite === undefined ? {} : { rewrite }),
   })
   return {
     handle,
@@ -172,4 +172,5 @@ test('命中端点规则时，改写后的 body 同样被带进路由', async (t
   assert.equal(b.seen.length, 1)
   assert.ok(b.seen[0].input instanceof Request)
   assert.equal(b.seen[0].input.headers.get('x-opencode-session'), 'session-42')
+  assert.equal(await b.seen[0].input.text(), '改过')
 })
